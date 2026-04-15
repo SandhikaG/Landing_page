@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Workflow Maturity Quiz | LeadWalnut</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Urbanist', sans-serif;
+            background: linear-gradient(135deg, #f8faf5 0%, #f0f3ed 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(15, 42, 61, 0.1);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0f2a3d 0%, #1a3a4d 100%);
+            padding: 30px 25px;
+            color: white;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #ffffff;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+
+        .logo-small {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .logo-small .lead {
+            color: #ffffff;
+        }
+
+        .logo-small .walnut {
+            color: #c8f194;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            padding: 20px 25px;
+            background: #f8faf5;
+            border-bottom: 1px solid #e8ebe3;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #0f2a3d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e8ebe3;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #78c317 0%, #c8f194 100%);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px 30px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-container {
+            display: none;
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            font-size: 12px;
+            font-weight: 700;
+            color: #78c317;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f2a3d;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px 18px;
+            background: #f8faf5;
+            border: 2px solid #e8ebe3;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #0f2a3d;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .option input[type="radio"]:checked + .option-label {
+            background: linear-gradient(135deg, #c8f194 0%, #f0f8e1 100%);
+            border-color: #78c317;
+            box-shadow: 0 4px 12px rgba(120, 195, 23, 0.2);
+        }
+
+        .option-label:hover {
+            border-color: #78c317;
+            background: #f5f8f0;
+        }
+
+        .radio-button {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid #d1d6ce;
+            border-radius: 50%;
+            margin-right: 14px;
+            margin-top: 2px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option input[type="radio"]:checked + .option-label .radio-button {
+            background: #78c317;
+            border-color: #78c317;
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        /* Results Page */
+        .results-container {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f2a3d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .score-badge {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .score-badge.level-1 {
+            background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);
+        }
+
+        .score-badge.level-2 {
+            background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%);
+        }
+
+        .score-badge.level-3 {
+            background: linear-gradient(135deg, #eab308 0%, #fde047 100%);
+        }
+
+        .score-badge.level-4 {
+            background: linear-gradient(135deg, #78c317 0%, #c8f194 100%);
+        }
+
+        .level-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f2a3d;
+            margin-bottom: 15px;
+        }
+
+        .level-description {
+            font-size: 15px;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .recommendations {
+            background: #f8faf5;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .recommendations-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f2a3d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .recommendation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .recommendation-bullet {
+            width: 6px;
+            height: 6px;
+            background: #78c317;
+            border-radius: 50%;
+            margin-right: 12px;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Urbanist', sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-secondary {
+            background: #f8faf5;
+            color: #0f2a3d;
+            border: 2px solid #e8ebe3;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e8ebe3;
+            border-color: #d1d6ce;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #78c317 0%, #c8f194 100%);
+            color: #0f2a3d;
+            border: none;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(120, 195, 23, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-cta {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #0f2a3d 0%, #1a3a4d 100%);
+            color: #78c317;
+            border: 2px solid #78c317;
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        .btn-cta:hover {
+            background: linear-gradient(135deg, #1a3a4d 0%, #243d51 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 42, 61, 0.3);
+        }
+
+        .btn-cta a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .cta-safe-box {
+            background: linear-gradient(135deg, #0f2a3d 0%, #1a3a4d 100%);
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .cta-safe-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .cta-safe-title strong {
+            color: #c8f194;
+            font-size: 20px;
+        }
+
+        .cta-safe-acronym {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+        .cta-box {
+    display: block;
+    padding: 16px;
+    border: 2px solid #78c317;
+    border-radius: 8px;
+    color: #78c317;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.cta-box:hover {
+    background: #78c317;
+    color: #0f2a3d;
+    transform: translateY(-2px);
+}
+
+        .cta-safe-acronym strong {
+            color: #c8f194;
+            font-size: 16px;
+        }
+
+        .cta-safe-box .btn-cta {
+            margin-top: 0;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f8faf5;
+            padding: 20px 25px;
+            text-align: center;
+            border-top: 1px solid #e8ebe3;
+            font-size: 12px;
+            color: #4b5563;
+        }
+
+        .footer a {
+            color: #78c317;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 25px 20px;
+                min-height: auto;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .score-badge {
+                width: 120px;
+                height: 120px;
+                font-size: 40px;
+            }
+
+            .level-name {
+                font-size: 20px;
+            }
+
+            .option-label {
+                font-size: 14px;
+                padding: 14px 16px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <div class="header-title">Finance Workflow Automation</div>
+                    <div class="header-subtitle">Quiz to Assess Your Process Maturity</div>
+                </div>
+                <div class="logo-small">
+                     <a href="https://www.leadwalnut.com/" class="logo">
+  <img src="logo.svg" alt="LeadWalnut Logo" style="height:40px;">
+</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-label">Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Quiz Container -->
+            <div id="quizContainer">
+                <!-- Questions will be generated here -->
+            </div>
+
+            <!-- Results Container -->
+            <div class="results-container" id="resultsContainer">
+                <div class="results-header">
+                    <div class="result-title">Your Results</div>
+                    <div class="score-badge" id="scoreBadge">0</div>
+                    <div class="level-name" id="levelName"></div>
+                    <div class="level-description" id="levelDescription"></div>
+                </div>
+
+                <div class="recommendations" id="recommendationsBox">
+                    <div class="recommendations-title">Recommendations</div>
+                    <div id="recommendationsList"></div>
+                </div>
+
+                <div class="cta-safe-box">
+                    <div class="cta-safe-title">Wish to Make Finance Processes <strong>SAFE</strong>?</div>
+                    <div class="cta-safe-acronym">
+                        <span><strong>S</strong>impler</span> &middot;
+                        <span><strong>A</strong>utomated</span> &middot;
+                        <span><strong>E</strong>fficient</span> &middot;
+                        <span><strong>F</strong>aster</span>
+                    </div>
+                    <a href="https://www.leadwalnut.com/contact-us" target="_blank" class="cta-box">
+  TALK TO LW FINANCE AI AUTOMATION EXPERT
+</a>
+                </div>
+                <button class="btn btn-secondary" onclick="restartQuiz()" style="margin-top: 10px;">Take Quiz Again</button>
+            </div>
+        </div>
+
+        <div class="nav-buttons" id="navButtons" style="padding: 0 30px 30px;">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display:none;">← Back</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next →</button>
+        </div>
+
+        <div class="footer">
+            Powered by <strong>LeadWalnut</strong> | <a href="https://www.leadwalnut.com" target="_blank">www.leadwalnut.com</a>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const quizData = [
+            {
+                question: "How does your team currently process vendor invoices?",
+                options: [
+                    { text: "Manually enter from paper/email into spreadsheets", score: 1 },
+                    { text: "Use basic templates in Excel with some formulas", score: 2 },
+                    { text: "Semi-automated with ERP but manual verification", score: 3 },
+                    { text: "Fully automated with AI extraction, validation, and ERP integration", score: 4 }
+                ]
+            },
+            {
+                question: "How long does your monthly financial close take?",
+                options: [
+                    { text: "More than 10 business days", score: 1 },
+                    { text: "7-10 business days", score: 2 },
+                    { text: "4-6 business days", score: 3 },
+                    { text: "1-3 business days with automated reconciliation", score: 4 }
+                ]
+            },
+            {
+                question: "What is your estimated data entry error rate in finance processes?",
+                options: [
+                    { text: "More than 8% — we find errors regularly", score: 1 },
+                    { text: "5-8% — errors are caught but cause rework", score: 2 },
+                    { text: "2-5% — we have some validation checks", score: 3 },
+                    { text: "Less than 1% — automated validation catches most issues", score: 4 }
+                ]
+            },
+            {
+                question: "How does your team handle employee reimbursements?",
+                options: [
+                    { text: "Paper forms and email with manual verification", score: 1 },
+                    { text: "Excel-based tracking with email approvals", score: 2 },
+                    { text: "Web portal with basic workflow but manual policy checks", score: 3 },
+                    { text: "Automated receipt OCR, policy validation, and approval routing", score: 4 }
+                ]
+            },
+            {
+                question: "How do you reconcile credit card statements?",
+                options: [
+                    { text: "Manually compare statements against receipts in spreadsheets", score: 1 },
+                    { text: "Basic matching using Excel formulas", score: 2 },
+                    { text: "ERP-assisted but requires manual categorization", score: 3 },
+                    { text: "Auto-ingestion with AI categorization and anomaly detection", score: 4 }
+                ]
+            },
+            {
+                question: "How would you describe your audit trail?",
+                options: [
+                    { text: "Scattered across emails, files, and spreadsheets", score: 1 },
+                    { text: "Centralized in shared folders but manually maintained", score: 2 },
+                    { text: "ERP provides basic logs but gaps exist", score: 3 },
+                    { text: "Complete, real-time, immutable audit trail across all processes", score: 4 }
+                ]
+            },
+            {
+                question: "What happens when a finance team member is absent for a week?",
+                options: [
+                    { text: "Critical processes stall until they return", score: 1 },
+                    { text: "Others can cover but it's slow and error-prone", score: 2 },
+                    { text: "Documented SOPs exist but execution is inconsistent", score: 3 },
+                    { text: "Automated workflows continue; no single point of failure", score: 4 }
+                ]
+            },
+            {
+                question: "How does your finance team handle exceptions and anomalies?",
+                options: [
+                    { text: "Usually discovered after the fact during reconciliation", score: 1 },
+                    { text: "Flagged manually by experienced team members", score: 2 },
+                    { text: "Basic rule-based alerts in our ERP system", score: 3 },
+                    { text: "AI-powered detection with automatic escalation and learning", score: 4 }
+                ]
+            },
+            {
+                question: "How integrated are your finance tools (payroll, invoicing, reconciliation)?",
+                options: [
+                    { text: "Completely siloed — each process uses different tools", score: 1 },
+                    { text: "Some tools share data via manual export/import", score: 2 },
+                    { text: "Partially integrated with some API connections", score: 3 },
+                    { text: "Fully integrated ecosystem with real-time data flow", score: 4 }
+                ]
+            },
+            {
+                question: "How does your finance operation scale with company growth?",
+                options: [
+                    { text: "Requires proportional headcount increase", score: 1 },
+                    { text: "Hire more people plus some process improvements", score: 2 },
+                    { text: "Technology helps but still need significant manual effort", score: 3 },
+                    { text: "AI-powered platform handles 10x volume without headcount increase", score: 4 }
+                ]
+            }
+        ];
+
+        const levelData = {
+            1: {
+                name: "Level 1 — Manual & Fragmented",
+                description: "Your finance operations rely heavily on manual processes and disconnected tools. This creates inefficiencies, high error rates, and scalability challenges. It's time to establish foundational automation and centralize your data.",
+                recommendations: [
+                    "Document all finance processes to establish baseline SOPs",
+                    "Centralize financial data into a single source of truth",
+                    "Consider piloting automation on vendor invoice processing",
+                    "Conduct a comprehensive audit of current error rates and process gaps"
+                ]
+            },
+            2: {
+                name: "Level 2 — Semi-Structured",
+                description: "You've made progress with basic templates and some tools, but processes remain inconsistent and semi-automated. There's significant opportunity to reduce errors and close your financial books faster through smarter workflows.",
+                recommendations: [
+                    "Implement validation rules and automated error-catching across workflows",
+                    "Create formal approval workflows with clear escalation paths",
+                    "Evaluate AI OCR solutions for invoice and receipt processing",
+                    "Consolidate finance tools to reduce manual data transfers"
+                ]
+            },
+            3: {
+                name: "Level 3 — Process-Mature",
+                description: "Your finance operation is well-structured with ERP support and solid documentation. Now it's time to leverage AI and advanced analytics to move beyond process management and gain predictive insights.",
+                recommendations: [
+                    "Add AI-powered extraction and validation to improve accuracy and speed",
+                    "Implement anomaly detection to catch exceptions automatically",
+                    "Integrate remaining siloed processes for complete data visibility",
+                    "Plan for scalability with predictive analytics and real-time dashboarding"
+                ]
+            },
+            4: {
+                name: "Level 4 — AI-Automated Excellence",
+                description: "You've achieved a highly automated, integrated finance operation powered by AI. Focus now shifts to advanced insights, continuous optimization, and leveraging your model for competitive advantage.",
+                recommendations: [
+                    "Expand AI capabilities to adjacent operations like planning and forecasting",
+                    "Benchmark your processes against industry best-in-class standards",
+                    "Consider offering your optimized model as a managed service to clients",
+                    "Invest in advanced analytics for real-time business intelligence"
+                ]
+            }
+        };
+
+        // State
+        let currentQuestion = 0;
+        let scores = new Array(quizData.length).fill(0);
+
+        // Initialize
+        function init() {
+            renderQuestions();
+            updateProgress();
+            showQuestion(0);
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = quizData.map((q, idx) => `
+                <div class="question-container" id="question-${idx}">
+                    <div class="question-number">Question ${idx + 1} of ${quizData.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIdx) => `
+                            <div class="option">
+                                <input type="radio" id="q${idx}-opt${optIdx}" name="question-${idx}" value="${opt.score}" onchange="selectOption(${idx}, ${opt.score})">
+                                <label class="option-label" for="q${idx}-opt${optIdx}">
+                                    <div class="radio-button"></div>
+                                    ${opt.text}
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectOption(questionIdx, score) {
+            scores[questionIdx] = score;
+            updateProgress();
+        }
+
+        function showQuestion(idx) {
+            // Hide all
+            document.querySelectorAll('.question-container').forEach(q => {
+                q.classList.remove('active');
+            });
+
+            // Show current
+            document.getElementById(`question-${idx}`).classList.add('active');
+
+            // Update nav buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (idx > 0) {
+                prevBtn.style.display = 'block';
+            } else {
+                prevBtn.style.display = 'none';
+            }
+
+            if (idx < quizData.length - 1) {
+                nextBtn.textContent = 'Next →';
+            } else {
+                nextBtn.textContent = 'See Results';
+            }
+        }
+
+        function nextQuestion() {
+            if (scores[currentQuestion] === 0) {
+                alert('Please select an option before proceeding.');
+                return;
+            }
+
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateProgress() {
+            const answered = scores.filter(s => s > 0).length;
+            const percentage = (answered / quizData.length) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function showResults() {
+            // Hide quiz, show results
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('navButtons').style.display = 'none';
+            document.getElementById('resultsContainer').classList.add('active');
+
+            // Calculate total score
+            const totalScore = scores.reduce((a, b) => a + b, 0);
+
+            // Determine level
+            let level, levelInfo;
+            if (totalScore <= 15) {
+                level = 1;
+            } else if (totalScore <= 25) {
+                level = 2;
+            } else if (totalScore <= 35) {
+                level = 3;
+            } else {
+                level = 4;
+            }
+
+            levelInfo = levelData[level];
+
+            // Display score
+            document.getElementById('scoreBadge').textContent = totalScore;
+            document.getElementById('scoreBadge').className = `score-badge level-${level}`;
+            document.getElementById('levelName').textContent = levelInfo.name;
+            document.getElementById('levelDescription').textContent = levelInfo.description;
+
+            // Display recommendations
+            const recList = document.getElementById('recommendationsList');
+            recList.innerHTML = levelInfo.recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <div class="recommendation-bullet"></div>
+                    ${rec}
+                </div>
+            `).join('');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            scores = new Array(quizData.length).fill(0);
+
+            // Reset radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Show quiz, hide results
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('navButtons').style.display = 'flex';
+            document.getElementById('resultsContainer').classList.remove('active');
+
+            updateProgress();
+            showQuestion(0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function shareResults() {
+            const totalScore = scores.reduce((a, b) => a + b, 0);
+            let level;
+            if (totalScore <= 15) {
+                level = 1;
+            } else if (totalScore <= 25) {
+                level = 2;
+            } else if (totalScore <= 35) {
+                level = 3;
+            } else {
+                level = 4;
+            }
+
+            const levelName = levelData[level].name;
+            const subject = `Finance Maturity Quiz Result: ${levelName}`;
+            const body = `Hi LeadWalnut Team,\n\nI just completed your Finance Workflow Maturity Quiz and scored ${totalScore}/40 (${levelName}).\n\nI'd like to schedule a free assessment to discuss how we can improve our finance operations.\n\nThank you!`;
+
+            window.location.href = `mailto:ajay@leadwalnut.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        // Start quiz on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
